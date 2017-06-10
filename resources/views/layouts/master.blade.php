@@ -1,5 +1,5 @@
 @include('layouts.header')
-<body onload="initialize()">
+<body onLoad="initialize();initMap();">
 	@yield('content')
 </body>
 @include('layouts.footer')

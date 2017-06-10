@@ -54,17 +54,17 @@
 			<div class="search col-md-6 col-md-offset-3">
 				<div class="search-icon col-sm-6 col-xs-12">
 					<div class="input-group">
-				      <input type="text" class="form-control" value="{{old('keyword')}}" name="keyword" placeholder="Tìm Kiếm...">
+				      <input type="text" class="form-control" value="{{old('keyword')}}" name="keyword" placeholder="Tìm Kiếm..." id="keyword">
 				      <span class="input-group-btn">
-				        <button type="submit" class="btn btn-secondary" type="button"><span class="glyphicon glyphicon-search"></span></button>
+				        <button  class="btn btn-secondary" type="submit" id="search"><span class="glyphicon glyphicon-search" ></span></button>
 				      </span>
 				    </div>
 				</div>
 
 				<div class="col-sm-6 col-xs-12">
 					<div class="input-group">
-				      <input type="text" class="form-control" value="{{old('vitri')}}" name="vitri" id="demo" placeholder="Vị trí...">
-				      
+				      <input type="text" class="form-control" value="{{old('positionName')}}" name="positionName" id="tenvitri" placeholder="Vị trí...">
+				      <input type="text" id="vitri"  name="vitri">
 				      <span class="input-group-btn">
 				        <button class="btn btn-secondary" id="getPosition" type="button"><span class="glyphicon glyphicon-map-marker"></span></button>
 				      </span>
@@ -187,7 +187,6 @@
 
 		            <div class="col-md-12 no-padding detail">
 						<?php
-						
 						$web = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='.$vitri.'&radius=5000&keyword='.$keyword.'&key=AIzaSyD0FewE444l6H8yw3-XVMOxF_kS27xIcAg';
 						$web = str_replace(' ','-',$web);
 						  error_reporting(0);
@@ -203,13 +202,13 @@
 								    	
 								  
 						        ?>
-
+								
 						        <div class="col-md-3 size-product">
 				            <div class="product-item">
 					              <div class="pi-img-wrapper">
 						                <img src="<?php echo $photo; ?>" class="img-responsive" width="250px" height="250px" alt="Cửa Hàng Bánh Ngọt" style="overflow: hidden;">
 						                <div>
-						                  <a href="direct/{{$vitri}}/{{$end}}" class="btn">Xem chi tiết</a>
+						                  <a href="direct/{{$vitri}}/{{$end}}/{{$ogrigin}}/{{$value['name']}}" class="btn">Xem chi tiết</a>
 						                </div>
 					              </div>
 					              

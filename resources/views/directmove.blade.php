@@ -13,7 +13,8 @@
     <link rel="stylesheet" type="text/css" href="{{asset('css/font-awesome.min.css')}}">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css?family=Monoton|Ubuntu" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css?family=Monoton|Ubuntu" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
    
     <style>
       /* Always set the map height explicitly to define the size of the div
@@ -94,10 +95,7 @@
       }
     </style>
   </head>
-  <body>
-    <!-- <div id="floating-panel">
-    </div> -->
-    <nav class="navbar navbar-default" role="navigation">
+  <nav class="navbar navbar-default" role="navigation">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -109,7 +107,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" style="font-family: 'Monoton', cursive;font-size: 30px;" href="#">ITFood</a>
+          <a class="navbar-brand" style="font-family: 'Monoton', cursive;font-size: 30px;" href="{{route('getPosition')}}">ITFood</a>
         </div>
     
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -125,52 +123,65 @@
         </div><!-- /.navbar-collapse -->
       </div>
     </nav>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="start">
-          <button class="btn btn-success">Vị trí xuất phát :</button><span> {{$ogrigin}}</span>
-        </div>
-        
-        <div class="end" style="margin-top: 10px;">
-          <button class="btn btn-danger" style="margin-bottom: 20px;">Vị trí đích :</button> 
-          <span> {{$destination}}</span>
-        </div>
+  <body onLoad="getLocation()">
 
-        <div class="end" style="margin-top: 10px;">
-          <a href="{{url('move/'.$endposition.'')}}">Chế độ di chuyển</a>
-          
-        </div>
-      </div>
+<!-- <p>Nhấn vào nút dưới đây để lấy tọa độ của bạn.</p>
+<button >Định vị</button> -->
+
+<p id="demo"></p>
+    <div id="floating-panel">
+      
+        <input type="hidden" id="start">
+      
     </div>
     <div id="right-panel"></div>
     <div id="map"></div>
-    <script src="{{asset('js/jquery.js')}}"></script>
-    <script>
+        <script>
+var x = document.getElementById("demo");
 
+function getLocation() {
+if (navigator.geolocation) {
+navigator.geolocation.watchPosition(showPosition);
+} else {
+x.innerHTML = "Trình duyệt của bạn không hỗ trợ Geolocation.";}
+}
+
+function showPosition(position) {
+// x.innerHTML="Vĩ độ: " + position.coords.latitude +
+// "<br>Kinh độ: " + position.coords.longitude;
+ $('#start').val(position.coords.latitude+','+position.coords.longitude);
+}
+</script>
+    <script>
       function initMap() {
         var directionsDisplay = new google.maps.DirectionsRenderer;
         var directionsService = new google.maps.DirectionsService;
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 10,
-          // center: {lat: 10.885053899999999, lng: 106.7817232}
+          center: {lat: 10.8870911, lng: 106.78351470000007}
         });
         directionsDisplay.setMap(map);
         directionsDisplay.setPanel(document.getElementById('right-panel'));
 
-        // var control = document.getElementById('floating-panel');
-        // control.style.display = 'block';
-        // map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
+        var control = document.getElementById('floating-panel');
+        control.style.display = 'block';
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
 
         var onChangeHandler = function() {
           calculateAndDisplayRoute(directionsService, directionsDisplay);
         };
-        window.onload = onChangeHandler;
+
+        setInterval(onChangeHandler,5000);
+        // document.getElementById('start').addEventListener('change', onChangeHandler);
+        
       }
 
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        var start = document.getElementById('start').value;
+        var end = "<?php echo $position; ?>";
         directionsService.route({
-          origin: '<?php echo $position; ?>',
-          destination: '<?php echo $endposition; ?>',
+          origin: start,
+          destination: end,
           travelMode: 'DRIVING'
         }, function(response, status) {
           if (status === 'OK') {
@@ -181,9 +192,9 @@
         });
       }
     </script>
+
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDi-oPYdlnMKX_sG7qB-eFhmLh9vHE41n4&callback=initMap">
     </script>
-    @include('layouts.footer')
   </body>
 </html>

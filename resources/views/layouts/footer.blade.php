@@ -96,8 +96,78 @@ glyphicon glyphicon-"></span>
 </div>
 <!-- <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyD0FewE444l6H8yw3-XVMOxF_kS27xIcAg
 "></script> -->
+<script>
+      function initMap() {
+        var geocoder = new google.maps.Geocoder();
 
+        document.getElementById('keyword').addEventListener('change', function() {
+          var address = document.getElementById('tenvitri').value;
+          geocoder.geocode({'address': address}, function(results, status) {
+            if (status === 'OK') {
+              $('#vitri').val(results[0].geometry.location);
+              // alert(results[0].geometry.location);
+            } else {
+              alert('Geocode was not successful for the following reason: ' + status);
+            }
+          });
+        });
+      }
 
+</script>
+
+<script type="text/javascript"> 
+  var geocoder = new google.maps.Geocoder();
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+} 
+//Get the latitude and the longitude;
+function successFunction(position) {
+    var lat = position.coords.latitude;
+    var lng = position.coords.longitude;
+    codeLatLng(lat, lng)
+}
+
+function errorFunction(){
+    alert("Geocoder failed");
+}
+
+  function initialize() {
+    geocoder = new google.maps.Geocoder();
+  }
+
+  function codeLatLng(lat, lng) {
+
+    var latlng = new google.maps.LatLng(lat, lng);
+    geocoder.geocode({'latLng': latlng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+      console.log(results)
+        if (results[1]) {
+         //formatted address
+         // alert(results[0].formatted_address)
+        //find country name
+             for (var i=0; i<results[0].address_components.length; i++) {
+            for (var b=0;b<results[0].address_components[i].types.length;b++) {
+                if (results[0].address_components[i].types[b] == "administrative_area_level_1") {
+                    //this is the object you are looking for
+                    city= results[0].address_components[i];
+                    break;
+                }
+            }
+        }
+        $('#getPosition').click(function(){
+        	$('#tenvitri').val(results[0].formatted_address);
+        	// $('#vitri').val(lat +','+lng);
+        });
+        } else {
+          alert("No results found");
+        }
+      } else {
+        alert("Geocoder failed due to: " + status);
+      }
+    });
+  }
+</script> 
 
 <script src="{{asset('js/Constellation.js')}}"></script>
     <!-- Bootstrap Core JavaScript -->
